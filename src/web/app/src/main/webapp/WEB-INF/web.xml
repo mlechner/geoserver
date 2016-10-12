@@ -261,5 +261,11 @@
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
-    
+
+    <resource-ref>
+        <res-ref-name>jdbc/postgres_dosrek</res-ref-name>
+        <res-type>javax.sql.DataSource</res-type>
+        <res-auth>Container</res-auth>
+    </resource-ref>
+
 </web-app>
