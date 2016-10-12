@@ -81,7 +81,8 @@
           <descriptor>release/ext-gwc-sqlite.xml</descriptor> 
           <descriptor>release/ext-geogig.xml</descriptor>
 		      <descriptor>release/ext-backup-restore.xml</descriptor>
-          <descriptor>release/ext-wmts-multi-dimensional.xml</descriptor> 
+          <descriptor>release/ext-wmts-multi-dimensional.xml</descriptor>
+          <descriptor>release/ext-wps-dosrek.xml</descriptor>
         </descriptors>
       </configuration>
      </plugin>
@@ -201,6 +202,7 @@
         <module>vectortiles</module>
         <module>wps-remote</module>
         <module>wps-jdbc</module>
+        <module>wps-dosrek</module>
         <module>release</module>
         <module>geogig</module>
 		<module>gwc-distributed</module>
@@ -412,6 +414,12 @@
       <id>wps-jdbc</id>
       <modules>
         <module>wps-jdbc</module>
+      </modules>
+    </profile>
+    <profile>
+      <id>wps-dosrek</id>
+      <modules>
+        <module>wps-dosrek</module>
       </modules>
     </profile>
     <profile>

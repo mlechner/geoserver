@@ -1339,6 +1339,16 @@
       </dependencies>
     </profile>
     <profile>
+      <id>wps-dosrek</id>
+      <dependencies>
+        <dependency>
+          <groupId>de.intevation</groupId>
+          <artifactId>wps-dosisrekonstruktion</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>excel</id>
       <dependencies>
         <dependency>

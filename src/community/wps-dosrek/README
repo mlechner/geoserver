@@ -1,0 +1,96 @@
+Building geoserver with WPS support
+===================================
+
+To build the geoserver with WPS support check out the follwing git repository:
+
+  $ git clone https://github.com/geoserver/geoserver.git
+
+For the dose reconstruction WPS update to stable version:
+
+  $ cd geoserver
+  $ git checkout 2.7.4
+
+Build the geoserver with maven by running:
+
+  $ cd src
+  $ mvn clean package -Pwps -DskipTests
+
+To deploy the geoserver WAR file copy geoserver.war to the appropriate folder
+of e.g. wildfly or tomcat.
+
+Setup database
+==============
+
+Add following to your Tomcat conf/context.xml to configure JNDI ressource
+needed by the DoseReconstruction process:
+
+   <Context>
+
+        <!--- .... --->
+        <Resource name="jdbc/postgres_dosrek"
+            auth="Container"
+            type="javax.sql.DataSource"
+            username="dosis"
+            password="dosis"
+            driverClassName="org.postgresql.Driver"
+            url="jdbc:postgresql://localhost:5431/dosis"
+            maxActive="8"
+            maxIdle="4"
+            accessToUnderlyingConnectionAllowed="true"/>
+
+   </Context>
+
+
+Building the dose reconstruction WPS
+====================================
+
+To build the jar file containing the dose reconstruction WPS plugin simply run
+
+  $ mvn clean compile package install
+
+Integration in geoserver
+========================
+
+There are two ways to integrate a WPS plugin:
+
+1. Copy the jar file and update the config file according to
+   geoserver-config.patch in the folder extracted by the Container
+
+  $ cp target/wps-dosisrekonstruktion-0.0.2-SNAPSHOT.jar \
+    /path/to/deploy-folder/geoserver/WEB-INF/lib/
+
+2. Apply geoserver-config.patch to geoserver and "build" geoserver again.
+   The patch applies changes to the config file and embedds the dose
+   reconstruction WPS jar file.
+
+   $ cd /where/is/geoserver
+   $ patch -p1 < /where/is/dosrek_wps/geoserver-config.patch
+   $ cd src
+   $ mvn package -Pwps -DskipTests
+
+On Wildfly AS the second is the preferred way, because war files are not
+extracted automatically.
+
+To test a WPS, geoserver has a Web-GUI where requests can be defined. For
+further inforamtion refer to the geoserver documentation:
+  http://docs.geoserver.org/stable/en/user/
+
+
+Requests
+========
+
+Request the capabilities document using curl:
+
+  $ curl http://YOURHOST:PORT/geoserver/ows?service=WPS&version=1.0.0&request=GetCapabilities
+
+Request process description using curl:
+
+  $ curl http://YOURHOST:PORT/geoserver/ows?service=WPS&version=1.0.0&request=DescribeProcess&identifier=bfs:DoseReconstruction
+
+Request process execution using curl:
+
+  $ curl -H "Content-type: xml" -X POST -d@example-request.xml http://YOURHOST:PORT/geoserver/wps
+
+  Where request-data.xml is a file containing the POST-data.
+  See 'example-request.xml' for POST data used for the bfs:dosereconstruction
+  WPS.
